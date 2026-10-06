@@ -1,0 +1,29 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: defs.schema.yaml
+title: Shared definitions
+$defs:
+  weekday:
+    type: string
+    enum: [mon, tue, wed, thu, fri, sat, sun]
+  month:
+    type: integer
+    minimum: 1
+    maximum: 12
+  cuisine:
+    type: string
+    enum: [nordic_comfort, italian, french, mediterranean_middle_eastern, asian, indian, mexican_latin, american, other]
+  unit:
+    type: string
+    enum: [g, kg, ml, l, tsp, tbsp, pcs, can, jar, pack, bunch, head]
+  category:
+    type: string
+    enum: [produce, legumes_tofu, dairy_eggs, grains_bread, canned_jarred, frozen, nuts_seeds, spices_condiments, oils, baking, snacks, other]
+  ingredient:
+    type: object
+    required: [name, quantity, unit]
+    additionalProperties: false
+    properties:
+      name: {type: string, minLength: 1}
+      quantity: {type: number, exclusiveMinimum: 0}
+      unit: {$ref: "#/$defs/unit"}
+      note: {type: string}

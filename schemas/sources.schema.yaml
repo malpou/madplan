@@ -1,0 +1,43 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: sources.schema.yaml
+title: Recipe and inspiration sources
+type: object
+additionalProperties: false
+required: [sources]
+properties:
+  sources:
+    type: array
+    items:
+      type: object
+      additionalProperties: false
+      required: [id, name, type, cuisines, rating, use_for]
+      properties:
+        id: {type: string, pattern: "^[a-z0-9_]+$"}
+        name: {type: string}
+        type: {type: string, enum: [website, cookbook, blog, app]}
+        url: {type: string, format: uri}
+        author: {type: string}
+        language: {type: string, enum: [en, da, other]}
+        cuisines:
+          type: array
+          items: {$ref: defs.schema.yaml#/$defs/cuisine}
+        use_for:
+          type: array
+          minItems: 1
+          items: {type: string, enum: [dinners, batch_cooking, snacks, athlete_fuel, inspiration, technique, budget]}
+        owned: {type: boolean, description: "Cookbooks: do we have it?"}
+        local_file: {type: string, pattern: "^cookbooks/", description: Path to our own copy}
+        paywalled: {type: boolean}
+        diet_focus: {type: string, enum: [general, vegetarian, vegan], description: "Who it suits: general = meat and veg"}
+        access: {type: string, enum: [ok, blocked], description: "Can the agent's WebFetch read it? Skip blocked sources."}
+        checked: {type: string, format: date, description: When access was last verified}
+        search_url: {type: string, pattern: "^https://.*\\{q\\}", description: "Site search; {q} = url-encoded ingredient"}
+        rating:
+          type: integer
+          minimum: 0
+          maximum: 5
+          description: "Our rating; 0 = untested"
+        notes: {type: string}
+      allOf:
+        - if: {properties: {type: {const: website}}}
+          then: {required: [url]}

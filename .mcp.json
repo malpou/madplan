@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "nemlig": {
+      "command": "uv",
+      "args": ["--directory", "nemlig-mcp", "run", "nemlig-mcp"]
+    }
+  }
+}

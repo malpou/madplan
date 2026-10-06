@@ -1,0 +1,12 @@
+{
+  "enabledMcpjsonServers": ["nemlig"],
+  "permissions": {
+    "allow": [
+      "Bash(cargo run -q -p validator:*)",
+      "Bash(pdftotext:*)",
+      "WebSearch",
+      "WebFetch",
+      "mcp__nemlig"
+    ]
+  }
+}

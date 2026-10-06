@@ -1,0 +1,172 @@
+# yaml-language-server: $schema=../weekly_plan.schema.yaml
+# EXAMPLE ONLY: prices and product IDs are placeholders, not real Nemlig data.
+week: 2026-W42
+status: draft
+created: 2026-10-09
+delivery:
+  date: 2026-10-11
+  slot: "18:00-20:00"
+training:
+  - {day: mon, activities: [climbing], intensity: moderate}
+  - {day: tue, activities: [running], intensity: easy}
+  - {day: wed, intensity: rest}
+  - {day: thu, activities: [running], intensity: hard}
+  - {day: fri, activities: [climbing], intensity: moderate}
+  - {day: sat, activities: [running], intensity: hard}
+  - {day: sun, intensity: rest}
+seasonal_focus: [hokkaido squash, kale, leeks, carrots, mushrooms, apples]
+sale_focus:
+  - {item: hokkaido squash, nemlig_product_id: "0000001", price_dkk: 20, regular_price_dkk: 25, ends: 2026-10-11}
+
+cook_sessions:
+  - id: s1
+    day: mon
+    est_minutes: 100
+    dishes: [squash_chickpea_curry, roast_veg_tray]
+    prep_order:
+      - Oven to 200°C; cube squash, carrots and onions.
+      - Roast tray veg (40 min); start rice.
+      - Make curry base while veg roasts.
+      - Portion into boxes; cool before fridge.
+  - id: s2
+    day: thu
+    est_minutes: 90
+    dishes: [lentil_mushroom_ragu]
+    prep_order:
+      - Soak/rinse lentils; dice mushrooms, leek, carrot.
+      - Simmer ragù 45 min; cook pasta for tonight only.
+      - Freeze 2 portions.
+
+dishes:
+  - id: squash_chickpea_curry
+    name: Mild hokkaido & chickpea curry with rice
+    cuisine: asian
+    new: false
+    source: {type: cookbook, source_id: east, adapted: "Milder, added tofu for protein"}
+    servings: 4
+    protein_g_per_serving: 32
+    fridge_days: 4
+    freezes: true
+    side_on_the_side: [chili flakes]
+    ingredients:
+      - {name: hokkaido squash, quantity: 1, unit: pcs}
+      - {name: chickpeas, quantity: 2, unit: can}
+      - {name: coconut milk (light), quantity: 1, unit: can}
+      - {name: firm tofu, quantity: 400, unit: g}
+      - {name: onion, quantity: 2, unit: pcs}
+      - {name: kale, quantity: 150, unit: g}
+      - {name: curry powder (mild), quantity: 2, unit: tbsp}
+      - {name: rice, quantity: 300, unit: g}
+    steps:
+      - Fry onion and curry powder in oil 5 min.
+      - Add squash, chickpeas, coconut milk; simmer 20 min.
+      - Add cubed tofu and chopped kale last 5 min.
+      - Serve with rice; chili on the side.
+  - id: roast_veg_tray
+    name: Roast root veg & halloumi bowls with yogurt-tahini
+    cuisine: mediterranean_middle_eastern
+    new: true
+    source: {type: website, source_id: love_and_lemons, url: "https://www.loveandlemons.com", adapted: Swapped yogurt for skyr}
+    servings: 2
+    protein_g_per_serving: 34
+    fridge_days: 3
+    freezes: false
+    ingredients:
+      - {name: carrots, quantity: 500, unit: g}
+      - {name: red onion, quantity: 2, unit: pcs}
+      - {name: halloumi, quantity: 225, unit: g}
+      - {name: skyr, quantity: 200, unit: g}
+      - {name: tahini, quantity: 2, unit: tbsp}
+      - {name: bulgur, quantity: 150, unit: g}
+    steps:
+      - Roast veg at 200°C for 40 min.
+      - Fry halloumi slices on the night of eating.
+      - Mix skyr, tahini, lemon, salt; serve over bulgur.
+  - id: lentil_mushroom_ragu
+    name: Lentil & mushroom ragù with pasta
+    cuisine: nordic_comfort
+    new: false
+    servings: 4
+    protein_g_per_serving: 30
+    fridge_days: 4
+    freezes: true
+    ingredients:
+      - {name: green lentils (dried), quantity: 250, unit: g}
+      - {name: mushrooms, quantity: 400, unit: g}
+      - {name: leek, quantity: 1, unit: pcs}
+      - {name: carrots, quantity: 2, unit: pcs}
+      - {name: chopped tomatoes, quantity: 2, unit: can}
+      - {name: pasta, quantity: 400, unit: g}
+      - {name: parmesan-style cheese, quantity: 60, unit: g}
+    steps:
+      - Brown mushrooms; add leek and carrot.
+      - Add lentils, tomatoes and 500 ml water; simmer 45 min.
+      - Serve over pasta with grated cheese.
+
+dinners:
+  - {day: mon, source: batch, dish_id: squash_chickpea_curry}
+  - {day: tue, source: batch, dish_id: roast_veg_tray, assembly: "Fry halloumi, warm veg, make dressing."}
+  - {day: wed, source: batch, dish_id: squash_chickpea_curry}
+  - {day: thu, source: batch, dish_id: lentil_mushroom_ragu}
+  - {day: fri, source: out}
+  - {day: sat, source: batch, dish_id: lentil_mushroom_ragu, assembly: "Reheat ragù, boil fresh pasta."}
+  - {day: sun, source: leftovers}
+
+snacks:
+  - name: Apple–oat energy balls
+    purpose: pre_run
+    makes: ~16 balls
+    prep: Blitz in food processor, roll, keep chilled up to 7 days.
+    ingredients:
+      - {name: oats, quantity: 150, unit: g}
+      - {name: dates, quantity: 200, unit: g}
+      - {name: peanut butter, quantity: 3, unit: tbsp}
+  - name: Skyr recovery smoothie
+    purpose: recovery
+    prep: Blend after training.
+    ingredients:
+      - {name: skyr, quantity: 1000, unit: g}
+      - {name: frozen berries, quantity: 500, unit: g}
+      - {name: bananas, quantity: 6, unit: pcs}
+  - name: Rugbrød with hummus & egg
+    purpose: everyday
+    ingredients:
+      - {name: rugbrød, quantity: 1, unit: pcs}
+      - {name: eggs, quantity: 10, unit: pcs}
+      - {name: hummus (homemade from chickpeas), quantity: 1, unit: can}
+
+shopping_list:
+  - {item: hokkaido squash, quantity: 1, unit: pcs, category: produce, organic: true, danish: true, price_dkk: 20, on_sale: true, regular_price_dkk: 25}
+  - {item: kale, quantity: 200, unit: g, category: produce, organic: true, danish: true, price_dkk: 20}
+  - {item: carrots, quantity: 1, unit: kg, category: produce, organic: true, danish: true, price_dkk: 15}
+  - {item: onions, quantity: 1, unit: kg, category: produce, organic: true, danish: true, price_dkk: 15}
+  - {item: red onions, quantity: 500, unit: g, category: produce, organic: true, price_dkk: 12}
+  - {item: leek, quantity: 1, unit: pcs, category: produce, organic: true, danish: true, price_dkk: 10}
+  - {item: mushrooms, quantity: 400, unit: g, category: produce, organic: true, danish: true, price_dkk: 30}
+  - {item: apples, quantity: 1, unit: kg, category: produce, organic: true, danish: true, price_dkk: 25}
+  - {item: bananas, quantity: 6, unit: pcs, category: produce, organic: true, price_dkk: 18}
+  - {item: chickpeas, quantity: 3, unit: can, category: legumes_tofu, organic: true, price_dkk: 30}
+  - {item: green lentils, quantity: 500, unit: g, category: legumes_tofu, organic: true, price_dkk: 25}
+  - {item: firm tofu, quantity: 400, unit: g, category: legumes_tofu, organic: true, price_dkk: 28}
+  - {item: halloumi, quantity: 225, unit: g, category: dairy_eggs, organic: false, non_organic_reason: no_organic_option, price_dkk: 30}
+  - {item: skyr, quantity: 2, unit: kg, category: dairy_eggs, organic: true, danish: true, price_dkk: 60}
+  - {item: eggs, quantity: 10, unit: pcs, category: dairy_eggs, organic: true, danish: true, price_dkk: 45}
+  - {item: rugbrød, quantity: 1, unit: pcs, category: grains_bread, organic: true, danish: true, price_dkk: 25}
+  - {item: bulgur, quantity: 500, unit: g, category: grains_bread, organic: true, price_dkk: 20}
+  - {item: coconut milk light, quantity: 1, unit: can, category: canned_jarred, organic: true, price_dkk: 15}
+  - {item: chopped tomatoes, quantity: 2, unit: can, category: canned_jarred, organic: true, price_dkk: 20}
+  - {item: frozen berries, quantity: 500, unit: g, category: frozen, organic: true, price_dkk: 40}
+  - {item: dates, quantity: 200, unit: g, category: snacks, organic: true, price_dkk: 25}
+  - {item: peanut butter, quantity: 1, unit: jar, category: nuts_seeds, organic: true, price_dkk: 40}
+  - {item: tahini, quantity: 1, unit: jar, category: spices_condiments, organic: true, price_dkk: 35}
+
+budget:
+  limit_dkk: 1000
+  groceries_dkk: 603
+  delivery_fee_dkk: 39
+  total_dkk: 642
+  within_budget: true
+  savings_dkk: 5
+notes:
+  - Halloumi bought non-organic (no organic option).
+  - Friday dinner out; Sunday uses fridge leftovers before new delivery.

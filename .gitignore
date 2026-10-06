@@ -1,0 +1,15 @@
+# Household data: created by the first-run interview, never committed
+data/
+plans/*.yaml
+logs/
+
+# Build output
+node_modules/
+dist/
+target/
+src-tauri/gen/
+.playwright-mcp/
+
+# Cookbooks you own are for your eyes only
+cookbooks/*
+!cookbooks/README.md

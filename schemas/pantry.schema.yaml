@@ -1,0 +1,22 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: pantry.schema.yaml
+title: Pantry inventory
+type: object
+additionalProperties: false
+required: [updated, items]
+properties:
+  updated: {type: string, format: date}
+  items:
+    type: array
+    items:
+      type: object
+      additionalProperties: false
+      required: [name, category, status]
+      properties:
+        name: {type: string}
+        name_da: {type: string}
+        category: {$ref: defs.schema.yaml#/$defs/category}
+        status: {type: string, enum: [stocked, low, out]}
+        quantity: {type: number, minimum: 0}
+        unit: {$ref: defs.schema.yaml#/$defs/unit}
+        staple: {type: boolean, description: Always keep in stock; reorder when low}

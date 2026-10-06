@@ -1,0 +1,58 @@
+# yaml-language-server: $schema=../schemas/seasonal.schema.yaml
+region: Denmark
+note: Approximate. Timing shifts a few weeks with the weather. Danish-grown on Nemlig is a good in-season signal.
+produce:
+  # Vegetables
+  - {name_da: hvidkål, name_en: white cabbage, type: vegetable, months: [8, 9, 10, 11, 12, 1, 2, 3, 4], storage_crop: true}
+  - {name_da: rødkål, name_en: red cabbage, type: vegetable, months: [8, 9, 10, 11, 12, 1, 2, 3, 4], storage_crop: true}
+  - {name_da: spidskål, name_en: pointed cabbage, type: vegetable, months: [5, 6, 7, 8, 9, 10, 11]}
+  - {name_da: grønkål, name_en: kale, type: vegetable, months: [10, 11, 12, 1, 2, 3]}
+  - {name_da: rosenkål, name_en: brussels sprouts, type: vegetable, months: [10, 11, 12, 1, 2]}
+  - {name_da: blomkål, name_en: cauliflower, type: vegetable, months: [6, 7, 8, 9, 10]}
+  - {name_da: broccoli, name_en: broccoli, type: vegetable, months: [6, 7, 8, 9, 10]}
+  - {name_da: gulerødder, name_en: carrots, type: vegetable, months: [7, 8, 9, 10, 11, 12, 1, 2, 3, 4], storage_crop: true}
+  - {name_da: pastinak, name_en: parsnip, type: vegetable, months: [9, 10, 11, 12, 1, 2, 3], storage_crop: true}
+  - {name_da: persillerod, name_en: parsley root, type: vegetable, months: [9, 10, 11, 12, 1, 2, 3], storage_crop: true}
+  - {name_da: knoldselleri, name_en: celeriac, type: vegetable, months: [9, 10, 11, 12, 1, 2, 3, 4], storage_crop: true}
+  - {name_da: rødbeder, name_en: beetroot, type: vegetable, months: [7, 8, 9, 10, 11, 12, 1, 2, 3], storage_crop: true}
+  - {name_da: jordskokker, name_en: jerusalem artichoke, type: vegetable, months: [10, 11, 12, 1, 2, 3]}
+  - {name_da: kartofler, name_en: potatoes, type: vegetable, months: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], storage_crop: true}
+  - {name_da: nye kartofler, name_en: new potatoes, type: vegetable, months: [6, 7, 8]}
+  - {name_da: løg, name_en: onions, type: vegetable, months: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], storage_crop: true}
+  - {name_da: porrer, name_en: leeks, type: vegetable, months: [8, 9, 10, 11, 12, 1, 2, 3, 4]}
+  - {name_da: græskar, name_en: "pumpkin / squash (hokkaido, butternut)", type: vegetable, months: [9, 10, 11], storage_crop: true}
+  - {name_da: squash, name_en: zucchini, type: vegetable, months: [7, 8, 9]}
+  - {name_da: spinat, name_en: spinach, type: vegetable, months: [4, 5, 6, 9, 10]}
+  - {name_da: radiser, name_en: radishes, type: vegetable, months: [4, 5, 6, 7, 8, 9]}
+  - {name_da: forårsløg, name_en: spring onions, type: vegetable, months: [4, 5, 6, 7]}
+  - {name_da: asparges, name_en: asparagus, type: vegetable, months: [5, 6]}
+  - {name_da: salat, name_en: lettuce, type: vegetable, months: [5, 6, 7, 8, 9, 10]}
+  - {name_da: ærter, name_en: peas, type: vegetable, months: [6, 7, 8]}
+  - {name_da: bønner, name_en: green beans, type: vegetable, months: [7, 8, 9]}
+  - {name_da: agurk, name_en: cucumber, type: vegetable, months: [4, 5, 6, 7, 8, 9, 10]}
+  - {name_da: tomater, name_en: tomatoes, type: vegetable, months: [4, 5, 6, 7, 8, 9, 10]}
+  - {name_da: fennikel, name_en: fennel, type: vegetable, months: [7, 8, 9, 10]}
+  - {name_da: majs, name_en: sweetcorn, type: vegetable, months: [8, 9]}
+  # Herbs & mushrooms
+  - {name_da: ramsløg, name_en: wild garlic, type: herb, months: [3, 4, 5]}
+  - {name_da: svampe, name_en: mushrooms, type: mushroom, months: [9, 10, 11]}
+  # Fruit
+  - {name_da: rabarber, name_en: rhubarb, type: fruit, months: [4, 5, 6, 7]}
+  - {name_da: jordbær, name_en: strawberries, type: fruit, months: [6, 7]}
+  - {name_da: kirsebær, name_en: cherries, type: fruit, months: [7, 8]}
+  - {name_da: hindbær, name_en: raspberries, type: fruit, months: [7, 8]}
+  - {name_da: blåbær, name_en: blueberries, type: fruit, months: [7, 8]}
+  - {name_da: solbær, name_en: blackcurrants, type: fruit, months: [7]}
+  - {name_da: blommer, name_en: plums, type: fruit, months: [8, 9]}
+  - {name_da: æbler, name_en: apples, type: fruit, months: [8, 9, 10, 11, 12, 1, 2, 3], storage_crop: true}
+  - {name_da: pærer, name_en: pears, type: fruit, months: [8, 9, 10, 11, 12, 1, 2], storage_crop: true}
+off_season_fallbacks:
+  - {item: spinach, form: frozen}
+  - {item: peas, form: frozen}
+  - {item: edamame, form: frozen}
+  - {item: broccoli, form: frozen}
+  - {item: berries, form: frozen}
+  - {item: tomatoes, form: canned}
+  - {item: beans, form: canned}
+  - {item: chickpeas, form: canned}
+  - {item: lentils, form: dried}

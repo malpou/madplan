@@ -1,0 +1,130 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: profile.schema.yaml
+title: Household profile
+description: Who we cook for and how our week works. Created by the agent's first-run interview.
+type: object
+additionalProperties: false
+required: [household, meals_to_plan, preferences, kitchen_equipment, routine, budget, delivery, sourcing]
+properties:
+  household:
+    type: object
+    additionalProperties: false
+    required: [adults, diet]
+    properties:
+      adults: {type: integer, minimum: 1}
+      children:
+        type: array
+        description: One entry per child; ages drive portion sizes and kid-friendly choices
+        items:
+          type: object
+          additionalProperties: false
+          required: [age]
+          properties:
+            age: {type: integer, minimum: 0, maximum: 17}
+            note: {type: string, description: "e.g. picky with vegetables, eats at daycare"}
+      diet: {type: string, enum: [omnivore, flexitarian, pescatarian, vegetarian, vegan]}
+      eggs_ok: {type: boolean}
+      dairy_ok: {type: boolean}
+      fish_ok: {type: boolean}
+      meat_days_per_week: {type: integer, minimum: 0, maximum: 7, description: Flexitarian/omnivore households that want a cap}
+  meals_to_plan:
+    type: array
+    minItems: 1
+    uniqueItems: true
+    items: {type: string, enum: [breakfast, lunch, packed_lunch, dinner, snack]}
+  preferences:
+    type: object
+    additionalProperties: false
+    required: [allergies, dislikes, cuisines, new_dishes_per_week]
+    properties:
+      allergies: {type: array, items: {type: string}}
+      dislikes:
+        type: array
+        items:
+          type: object
+          additionalProperties: false
+          required: [item, handling]
+          properties:
+            item: {type: string}
+            who: {type: string, description: "Who dislikes it, if not everyone"}
+            handling: {type: string, description: How the agent should deal with it}
+      cuisines:
+        type: array
+        minItems: 1
+        uniqueItems: true
+        items: {$ref: defs.schema.yaml#/$defs/cuisine}
+      favorites: {type: array, items: {type: string}, description: Dishes the household always likes}
+      new_dishes_per_week:
+        type: object
+        additionalProperties: false
+        required: [min, max]
+        properties:
+          min: {type: integer, minimum: 0}
+          max: {type: integer, minimum: 0}
+  nutrition:
+    type: object
+    additionalProperties: false
+    properties:
+      goals:
+        type: array
+        uniqueItems: true
+        items: {type: string, enum: [balanced, high_protein, high_satiety, more_vegetables, less_sugar, weight_loss, performance, budget]}
+      protein_g_per_adult_main_meal: {type: integer, minimum: 0}
+      notes: {type: string}
+  activity:
+    type: object
+    additionalProperties: false
+    required: [activities, schedule]
+    properties:
+      activities: {type: array, items: {type: string}, description: "e.g. running, climbing, football practice"}
+      schedule: {type: string, enum: [fixed, varies]}
+      carb_boost_on_hard_days: {type: boolean}
+  kitchen_equipment:
+    type: array
+    uniqueItems: true
+    items: {type: string, enum: [oven, stove, blender, food_processor, air_fryer, rice_cooker, pressure_cooker, slow_cooker, microwave, grill]}
+  routine:
+    type: object
+    additionalProperties: false
+    required: [dinners_per_week, cooking_style, weeknight_max_minutes, portions]
+    properties:
+      dinners_per_week:
+        type: object
+        additionalProperties: false
+        required: [min, max]
+        properties:
+          min: {type: integer, minimum: 0, maximum: 7}
+          max: {type: integer, minimum: 0, maximum: 7}
+      cooking_style:
+        type: string
+        enum: [daily, batch, mixed]
+        description: "daily: cook most nights; batch: a few big sessions; mixed: both"
+      cook_sessions_per_week: {type: integer, minimum: 1, description: Batch/mixed cooking only}
+      max_session_minutes: {type: integer, minimum: 15}
+      weeknight_max_minutes: {type: integer, minimum: 5, description: Hands-on time on a normal weeknight}
+      portions: {type: string, enum: [small, normal, large, mixed]}
+      leftovers_for_lunch: {type: boolean}
+  budget:
+    type: object
+    additionalProperties: false
+    required: [weekly_dkk, includes_delivery]
+    properties:
+      weekly_dkk: {type: number, exclusiveMinimum: 0}
+      includes_delivery: {type: boolean}
+  delivery:
+    type: object
+    additionalProperties: false
+    required: [provider, day, window]
+    properties:
+      provider: {type: string, const: nemlig}
+      day: {$ref: defs.schema.yaml#/$defs/weekday}
+      window: {type: string, enum: [morning, afternoon, evening]}
+  sourcing:
+    type: object
+    additionalProperties: false
+    required: [organic, prefer_danish, seasonal]
+    properties:
+      organic: {type: string, enum: [always, preferred, when_cheap, no_preference]}
+      prefer_danish: {type: boolean}
+      seasonal: {type: boolean}
+      prioritize_sales: {type: boolean}
