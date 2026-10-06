@@ -4,7 +4,7 @@ title: Household profile
 description: Who we cook for and how our week works. Created by the agent's first-run interview.
 type: object
 additionalProperties: false
-required: [household, meals_to_plan, preferences, kitchen_equipment, routine, budget, delivery, sourcing]
+required: [household, meals_to_plan, preferences, kitchen_equipment, routine, budget, delivery]
 properties:
   household:
     type: object
@@ -121,10 +121,17 @@ properties:
       window: {type: string, enum: [morning, afternoon, evening]}
   sourcing:
     type: object
+    description: How to choose products. Everything is optional; leave out what the household has no opinion on.
     additionalProperties: false
-    required: [organic, prefer_danish, seasonal]
     properties:
-      organic: {type: string, enum: [always, preferred, when_cheap, no_preference]}
-      prefer_danish: {type: boolean}
-      seasonal: {type: boolean}
-      prioritize_sales: {type: boolean}
+      priorities:
+        type: array
+        description: What matters most when choosing products, most important first
+        uniqueItems: true
+        items: {type: string, enum: [price, organic, danish, seasonal, quality, convenience, animal_welfare, low_waste]}
+      organic: {type: string, enum: [always, preferred, when_cheap, no_preference], description: "Unset = no_preference"}
+      prefer_danish: {type: boolean, description: "Unset = false"}
+      seasonal: {type: boolean, description: "Unset = true: seasonal produce is cheaper and tastes better"}
+      prioritize_sales: {type: boolean, description: "Unset = true"}
+      budget_brands: {type: boolean, description: "Happy with budget/discount ranges for staples. Unset = false"}
+      avoid_brands: {type: array, items: {type: string}}

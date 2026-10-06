@@ -184,6 +184,9 @@ impl Validator {
                 errs.push(format!("dinner {}: unknown dish '{id}'", s(&dn, "day").unwrap_or_default()));
             }
         }
+        let profile = load(&self.root.join("data/profile.yaml")).unwrap_or(Value::Null);
+        errs.extend(organic_reason_errors(doc, &profile));
+
         // Campaigns only count if they still run on the delivery date (ISO dates compare as strings).
         let delivery = doc.get("delivery").and_then(|d| s(d, "date")).unwrap_or_default();
         for deal in arr(doc, "sale_focus") {
@@ -228,12 +231,49 @@ impl Validator {
     }
 }
 
+/// When the household prefers organic, every non-organic item must say why.
+/// Households without an organic preference don't record it at all.
+fn organic_reason_errors(plan: &Value, profile: &Value) -> Vec<String> {
+    let prefers_organic =
+        matches!(profile.pointer("/sourcing/organic").and_then(Value::as_str), Some("always" | "preferred"));
+    if !prefers_organic {
+        return Vec::new();
+    }
+    plan.get("shopping_list")
+        .and_then(Value::as_array)
+        .into_iter()
+        .flatten()
+        .filter(|i| i.get("organic") == Some(&Value::Bool(false)) && i.get("non_organic_reason").is_none())
+        .map(|i| {
+            let item = i.get("item").and_then(Value::as_str).unwrap_or_default();
+            format!("shopping_list {item}: not organic, but the profile prefers organic; add non_organic_reason")
+        })
+        .collect()
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
 
     fn root() -> PathBuf {
         PathBuf::from(env!("CARGO_MANIFEST_DIR")).parent().unwrap().to_path_buf()
+    }
+
+    #[test]
+    fn non_organic_reason_only_required_when_profile_prefers_organic() {
+        let plan = serde_json::json!({"shopping_list": [
+            {"item": "halloumi", "organic": false},
+            {"item": "oats", "organic": false, "non_organic_reason": "budget"},
+            {"item": "rice"}
+        ]});
+        let prefers = serde_json::json!({"sourcing": {"organic": "preferred"}});
+        let errs = organic_reason_errors(&plan, &prefers);
+        assert_eq!(errs.len(), 1, "{errs:?}");
+        assert!(errs[0].contains("halloumi"));
+
+        for profile in [serde_json::json!({"sourcing": {"organic": "when_cheap"}}), serde_json::json!({}), Value::Null] {
+            assert!(organic_reason_errors(&plan, &profile).is_empty());
+        }
     }
 
     #[test]

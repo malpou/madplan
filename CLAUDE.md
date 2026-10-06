@@ -20,7 +20,7 @@ Topics, in order:
 3. **Taste**: favourite cuisines, a few dishes everyone loves, how adventurous: new dishes per week. → `preferences`
 4. **Goals and activity**: any nutrition goals (high protein, more vegetables, less sugar, budget…); sports or training that changes how much people eat. Skip `activity` entirely if nobody trains. → `nutrition`, `activity`
 5. **The week**: which meals to plan (dinner, packed lunches/madpakker, breakfast, snacks); how many dinners at home; cook daily or batch-cook (sessions per week, how long); max hands-on time on a weeknight; leftovers for lunch; kitchen equipment. → `meals_to_plan`, `routine`, `kitchen_equipment`
-6. **Shopping**: weekly budget in DKK (incl. delivery?); nemlig delivery day and time window; organic always/preferred/when cheap/no preference; prefer Danish; seasonal; prioritise sales. → `budget`, `delivery`, `sourcing`
+6. **Shopping**: weekly budget in DKK (incl. delivery?); nemlig delivery day and time window. Then ask what matters most when choosing products, offering the options rather than assuming any: price, organic, Danish, seasonal, quality, convenience, animal welfare, low waste. Record their ranking in `sourcing.priorities` and only set the specific fields they actually care about (organic level, prefer Danish, budget ranges, brands to avoid). → `budget`, `delivery`, `sourcing`
 
 Write `data/profile.yaml` (schema `schemas/profile.schema.yaml`).
 
@@ -55,7 +55,7 @@ Apply these through the profile; the profile wins when they conflict.
 - With children in the household, keep main dishes mild and familiar enough for them; put chili and strong flavours on the side, and note `kid_friendly` on dishes.
 - Make it filling: protein + fibre + volume (vegetables, legumes, whole grains, potatoes).
 - With `activity`: more carbs on hard training days, a bit lighter on rest days, and pre/post-training snacks.
-- Organic, Danish and seasonal as the `sourcing` settings say. Out-of-season fresh produce is the exception; use frozen or canned instead.
+- Choose products by the household's **Shopping priorities** (below). Out-of-season fresh produce is the exception; use frozen or canned instead.
 - Choose things that keep well in the fridge for 3–4 days when batch-cooking.
 - For packed lunches (`packed_lunch`): things that travel and taste good cold, ideally made from dinner leftovers.
 
@@ -69,18 +69,28 @@ Apply these through the profile; the profile wins when they conflict.
 - When they rate a dish, store `rating` in the plan; use high-rated dishes as familiar favourites in future weeks and update the source's rating.
 - Never download or use pirated cookbook PDFs. Only use books in `cookbooks/` or freely published recipes.
 
+## Shopping priorities
+`sourcing` in the profile says how this household chooses products. Follow it; don't push organic, Danish or premium products on a household that hasn't asked for them.
+- `priorities` is ranked, most important first. When two goals conflict (an organic product vs a cheaper one), the higher-ranked one wins.
+- Defaults for unset fields: `organic: no_preference`, `prefer_danish: false`, `seasonal: true` (seasonal produce is usually both cheaper and better), `prioritize_sales: true`, `budget_brands: false`.
+- `price` first or `budget_brands: true`: pick the cheapest product that does the job, including budget ranges (`Discount` label, store brands), compare by unit price (`UnitPriceCalc`), and favour cheap filling staples. Mark budget-range picks with `budget_range: true`.
+- `organic: always` / `preferred`: pick organic (økologisk) where it exists; for each non-organic item set `organic: false` + `non_organic_reason` (the validator enforces this). `when_cheap`: organic only when it costs about the same. Otherwise don't record `organic` at all.
+- `prefer_danish`: pick Danish-produced items when Nemlig offers them; mark `danish: true`.
+- `quality`: prefer better products over the cheapest, within budget. `convenience`: pre-cut, ready-made or frozen components are fine if they save real time. `animal_welfare`: free-range/organic eggs, dairy and meat; higher welfare labels. `low_waste`: buy amounts that get used up, reuse ingredients across dishes.
+- `avoid_brands`: never pick those.
+
 ## Sales (nemlig campaigns)
 When `sourcing.prioritize_sales` is true (or unset), prioritise what's on sale, but never at the cost of the food principles: a sale item has to fit the plan.
 - There is no "offers" listing: search nemlig for each candidate ingredient and read the `Campaign` object on the results. Searching "tilbud" does not work.
 - A campaign counts only if `IntervalStart` ≤ delivery date ≤ `IntervalEnd` (convert from UTC to Danish time) and it is actually cheaper:
   - `ProductCampaignDiscountPercent` / `ProductCampaignDiscount`: use `CampaignPrice` only when it is **below** `Price` (`DiscountSavings` > 0). Some campaigns are priced higher than the normal price; ignore those.
   - `ProductCampaignMixOffer` ("x for y kr"): only worth it if the household uses `MinQuantity` units anyway; the unit price is `TotalPrice / MinQuantity`.
-  - The `Discount` *label* (and `DiscountItem`) is a budget product range, not a sale.
+  - The `Discount` *label* (and `DiscountItem`) is a budget product range, not a sale. It's a good pick for price-first households, but don't count it as a deal.
 - When the order is placed later than planned, re-check that campaigns still hold before adding to the basket.
 
 ## Budget
 - The weekly budget is in `data/profile.yaml`. Stay within it (including delivery if `includes_delivery`).
-- If organic pushes the total over, keep organic for produce eaten with the skin, dairy and eggs first; switch dry goods/canned legumes to non-organic before dropping organic produce. Say what you switched.
+- If the household's preferences push the total over, give up the lowest-ranked priority first and say what you switched. For organic households: keep organic for produce eaten with the skin, dairy and eggs first; switch dry goods and canned legumes to non-organic before dropping organic produce.
 - Cheap protein first: legumes, eggs, tofu, hytteost, skyr, oats, and for meat eaters minced meat and chicken on sale.
 
 ## Meal prep logic
@@ -101,7 +111,7 @@ Only when `snack` is in `meals_to_plan`. 4–6 options per week that fit the die
 4. Find recipes for those ingredients in the sources (see **Recipe research**) and propose the plan for the meals in `meals_to_plan`. Save it right away as `plans/YYYY-Www.yaml` with `status: draft`, `seasonal_focus` and `sale_focus`, and validate it. Show a short table with protein per dish, plus the seasonal produce and deals the week is built around.
 5. Wait for OK or changes. Apply changes to the YAML, re-validate, then set `status: approved`.
 6. Fill `shopping_list` in the plan: consolidated quantities for the whole household, minus pantry items.
-7. Search each item on nemlig. Follow `sourcing.organic`; when an item isn't organic, set `organic: false` + `non_organic_reason`. Between equivalent products, prefer the one with a valid campaign. Store `nemlig_product_id`, `nemlig_name`, `price_dkk` (line total, campaign price when on sale); on sale items also get `on_sale: true` + `regular_price_dkk`. Fill `budget` including `savings_dkk`, validate, and show the list with prices, total and savings.
+7. Search each item on nemlig and pick products by **Shopping priorities**. Between equivalent products, prefer the one with a valid campaign. Store `nemlig_product_id`, `nemlig_name`, `price_dkk` (line total, campaign price when on sale); on sale items also get `on_sale: true` + `regular_price_dkk`. Fill `budget` including `savings_dkk`, validate, and show the list with prices, total and savings.
 8. Only add items to the basket after an explicit confirmation. Set `in_basket: true` per item and `status: ordered` once done. The nemlig tools can't choose a delivery slot or check out: tell the household to pick the slot and pay on nemlig.com themselves. NEVER try to complete checkout or pay.
 9. Update `data/pantry.yaml` (status stocked/low/out, `updated` date) and validate it.
 10. After the week, when asked, set the plan to `status: done` and ask for quick ratings of the dishes.

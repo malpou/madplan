@@ -7,7 +7,7 @@
   const list = $derived(plan.shopping_list ?? []);
   const b = $derived(plan.budget ?? {});
   const groups = $derived(Object.entries(Object.groupBy(list, (i) => i.category)));
-  const nonOrganic = $derived(list.filter((i) => i.organic === false).length);
+  const organic = $derived(list.filter((i) => i.organic).length);
   const inBasket = $derived(list.filter((i) => i.in_basket).length);
   const onSale = $derived(list.filter((i) => i.on_sale).length);
   const pct = $derived(b.limit_dkk ? Math.min(100, (100 * (b.total_dkk ?? 0)) / b.limit_dkk) : 0);
@@ -25,7 +25,7 @@
     <div class="row muted small">
       <span>Groceries {dkk(b.groceries_dkk)}</span>·<span>Delivery {dkk(b.delivery_fee_dkk)}</span>·
       <span>{list.length} items</span>·
-      {#if onSale}<span class="saved">{onSale} on sale, saved {dkk(b.savings_dkk)}</span>·{/if}<span>{nonOrganic} non-organic</span>·<span>{inBasket}/{list.length} in basket</span>
+      {#if onSale}<span class="saved">{onSale} on sale, saved {dkk(b.savings_dkk)}</span>·{/if}{#if organic}<span>{organic} organic</span>·{/if}<span>{inBasket}/{list.length} in basket</span>
     </div>
   </div>
 
@@ -47,7 +47,9 @@
               <td class="num">{i.quantity} {i.unit}</td>
               <td class="muted">{i.nemlig_name ?? "—"}</td>
               <td>
-                {#if i.organic}<span class="chip good">Ø</span>{:else}<span class="chip warn" title="Not organic">{label(i.non_organic_reason)}</span>{/if}
+                {#if i.organic}<span class="chip good" title="Organic">Ø</span>{/if}
+                {#if i.non_organic_reason}<span class="chip warn" title="Not organic">{label(i.non_organic_reason)}</span>{/if}
+                {#if i.budget_range}<span class="chip" title="Budget range">budget</span>{/if}
                 {#if i.danish}<span class="chip">DK</span>{/if}
               </td>
               <td class="num">

@@ -8,9 +8,9 @@ It's a small desktop app (Tauri + Svelte) with [Claude Code](https://docs.claude
 
 ## What it does
 
-- **Gets to know your household first.** On first start, the agent interviews you for about five minutes: who you cook for (adults, children's ages), diet and allergies, dislikes, favourite cuisines, how your week looks (cook daily or batch-cook, packed lunches, time on weeknights), budget and delivery day. It saves your answers as your profile and sets up your recipe sources and pantry. You can send photos of your shelves and it reads the labels.
+- **Gets to know your household first.** On first start, the agent interviews you for about five minutes: who you cook for (adults, children's ages), diet and allergies, dislikes, favourite cuisines, how your week looks (cook daily or batch-cook, packed lunches, time on weeknights), budget, delivery day, and what matters when you shop (price, organic, Danish, quality, convenience…). It saves your answers as your profile and sets up your recipe sources and pantry. You can send photos of your shelves and it reads the labels.
 - **Plans the week.** Dinners (plus packed lunches, breakfasts or snacks if you want them), built around Danish seasonal produce and this week's nemlig offers. Recipes come from real recipe sites (Danish and English) that it searches and reads, adapted to your household.
-- **Builds the shopping list.** Quantities for your household minus what's already in your pantry, priced on nemlig with organic/Danish preferences and sale prices, checked against your budget.
+- **Builds the shopping list.** Quantities for your household minus what's already in your pantry, priced on nemlig by your own priorities (cheapest, organic, Danish, budget ranges, whatever you chose) and this week's sale prices, checked against your budget.
 - **Fills the basket when you say so.** It never checks out or pays; you choose the delivery slot and pay on nemlig.com.
 - **The app** shows the plan, the shopping list with budget and savings, and an editable pantry, next to the chat with the agent. You can steer the agent while it works.
 
@@ -82,17 +82,31 @@ Everything also works without the app: run `claude` in the repo and say hi. The 
 
 ## How it works
 
-```
- Madplan app (Tauri)                         your machine
- ┌───────────────────────────┐
- │ Plan · Shopping · Pantry  │◀── watches ──┐
- │            Chat ──────────┼─▶ claude ────┼──▶ data/*.yaml, plans/*.yaml
- └───────────────────────────┘    (Claude   │        ▲
-                                    Code)   │        │ validated by
-                                      │     │   validator/ (JSON Schema
-                                      │     │   + cross-checks)
-                                      ├──▶ nemlig-mcp ──▶ nemlig.com
-                                      └──▶ recipe sites (web fetch)
+```mermaid
+flowchart LR
+    subgraph app["Madplan app (Tauri)"]
+        views["Plan · Shopping · Pantry"]
+        chat["Chat"]
+    end
+
+    subgraph local["Your machine"]
+        agent["claude<br/>(Claude Code + CLAUDE.md)"]
+        files[("data/*.yaml<br/>plans/*.yaml")]
+        validator["validator<br/>(JSON Schema + cross-checks)"]
+        mcp["nemlig-mcp"]
+    end
+
+    nemlig(["nemlig.com"])
+    sites(["Recipe sites"])
+
+    chat -- "messages and steering" --> agent
+    agent -- "streamed replies" --> chat
+    agent -- "reads and writes" --> files
+    validator -- "checks" --> files
+    views -. "watches and edits pantry" .-> files
+    agent -- "search, basket" --> mcp
+    mcp --> nemlig
+    agent -- "web search and fetch" --> sites
 ```
 
 - **The agent** is Claude Code running in this folder, steered by [`CLAUDE.md`](CLAUDE.md) (interview, food principles, sales rules, workflow). The app keeps one `claude` process per chat and streams its output; messages you send while it works are delivered as steering.

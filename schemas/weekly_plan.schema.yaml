@@ -135,15 +135,16 @@ properties:
     items:
       type: object
       additionalProperties: false
-      required: [item, quantity, unit, category, organic, price_dkk]
+      required: [item, quantity, unit, category, price_dkk]
       properties:
         item: {type: string}
         quantity: {type: number, exclusiveMinimum: 0}
         unit: {$ref: defs.schema.yaml#/$defs/unit}
         category: {$ref: defs.schema.yaml#/$defs/category}
-        organic: {type: boolean}
+        organic: {type: boolean, description: Record when the household cares about organic}
         danish: {type: boolean}
-        non_organic_reason: {type: string, enum: [no_organic_option, unavailable, budget]}
+        non_organic_reason: {type: string, enum: [no_organic_option, unavailable, budget], description: "Required by the validator when the profile prefers organic"}
+        budget_range: {type: boolean, description: "Product is from a budget/discount range"}
         nemlig_product_id: {type: string}
         nemlig_name: {type: string}
         price_dkk: {type: number, minimum: 0, description: Line total; campaign price when on_sale}
@@ -151,8 +152,6 @@ properties:
         regular_price_dkk: {type: number, minimum: 0, description: Line total without the campaign}
         in_basket: {type: boolean}
       allOf:
-        - if: {properties: {organic: {const: false}}}
-          then: {required: [non_organic_reason]}
         - if: {properties: {on_sale: {const: true}}, required: [on_sale]}
           then: {required: [regular_price_dkk]}
   budget:
